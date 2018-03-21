@@ -32,7 +32,6 @@
         xDomain = d3.extent(data, function(d, i){
           return i;
         });
-        console.log('xDomain', xDomain);
         // use the domain to map to visual range
 
         yScale.domain(yDomain);
@@ -57,7 +56,6 @@
                 return yScale(d.YEAR_LEARNED);
             })
             .attr('x', function(d, i){
-              console.log('xScale(d.TECHNOLOGY_NAME)', i);
               return  xScale(i);
             })
             .attr('height', function(d){
