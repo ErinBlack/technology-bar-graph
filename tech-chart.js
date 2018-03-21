@@ -17,6 +17,9 @@
     var yScale = d3.scale.linear()
                           .range([height, 0]);
 
+    var xScale = d3.scale.linear()
+                          .range([0, width]);
+
     // creating the chart bars
     d3.csv('technologies.csv', function(data){
 
@@ -24,9 +27,16 @@
         yDomain = d3.extent(data, function(element){
             return parseInt(element.YEAR_LEARNED);
         });
+
+        // Finding the heighest and lowest values for the x value
+        xDomain = d3.extent(data, function(d, i){
+          return i;
+        });
+        console.log('xDomain', xDomain);
         // use the domain to map to visual range
 
         yScale.domain(yDomain);
+        xScale.domain(xDomain);
         bars = chart.selectAll('rect')
           .data(data)
           .enter()
@@ -47,7 +57,8 @@
                 return yScale(d.YEAR_LEARNED);
             })
             .attr('x', function(d, i){
-              return (width/ data.length) * i;
+              console.log('xScale(d.TECHNOLOGY_NAME)', i);
+              return  xScale(i);
             })
             .attr('height', function(d){
               return height  - yScale(d.YEAR_LEARNED);
