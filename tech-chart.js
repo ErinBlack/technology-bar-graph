@@ -1,17 +1,19 @@
 // JS closure
 (function(){
-  var height = 300,
+  var height = 600,
       width = 500;
   var padding = 50;
-  var barPadding = 10;
   // var currentYear = (new Date()).getFullYear() + 1;
 
   var chart = d3.select('.chart__section')
     .append('svg')
     .attr('id', 'chart__body')
-    .attr('height', height )
-    .attr('width', width )
-    .append('g');
+    .attr('height', height + padding * 2 )
+    .attr('width', width + padding * 2 )
+    .append('g')
+    .attr('id', 'viz')
+    .attr('transform', 'translate(' + padding + ',' + padding + ')');
+
 
     // scale from the top of the page to the bottom
     var yScale = d3.scale.linear()
@@ -19,6 +21,16 @@
 
     var xScale = d3.scale.linear()
                           .range([0, width]);
+
+    // Setting up the X and Y Axis
+    var xAxis = d3.svg.axis().scale(xScale)
+                            .orient('bottom')
+                            .ticks(10);
+
+    var yAxis = d3.svg.axis().scale(yScale)
+                            .orient('left')
+                            .ticks(12);
+
 
     // creating the chart bars
     d3.csv('technologies.csv', function(data){
@@ -36,6 +48,18 @@
 
         yScale.domain(yDomain);
         xScale.domain(xDomain);
+
+        // Append X Axis
+        chart.append('g')
+          .attr('class', 'x axis')
+          .attr('transform', 'translate(0,' + height + ')')
+          .call(xAxis);
+
+        chart.append('g')
+          .attr('class', 'y axis')
+          .call(yAxis)
+
+
         bars = chart.selectAll('rect')
           .data(data)
           .enter()
@@ -47,7 +71,7 @@
           })
             .style('fill', 'blue')
             .attr('width', function(d){
-              return (width/ data.length) - barPadding;
+              return (width/ data.length);
             })
             .attr('y', height)
             .transition()
